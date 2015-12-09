@@ -410,6 +410,7 @@
                <field type="uint16_t" name="adc6">ADC output 6</field>
           </message>
 
+
 	  <!-- Camera Controller Messages -->
 	  <message name="DIGICAM_CONFIGURE" id="154">
 	    <description>Configure on-board Camera Control System.</description>

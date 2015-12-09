@@ -237,6 +237,17 @@ void Rover::send_nav_controller_output(mavlink_channel_t chan)
         nav_controller->crosstrack_error());
 }
 
+void Rover::send_tractor_health(mavlink_channel_t chan)
+{
+    mavlink_msg_tractor_health_send(
+        chan,
+        3, // D4 field of 0x0CF00400 256^0*D4+256^1*D5=Total Decimal
+        4, // D5 field of 0x0CF00400 256^0*D4+256^1*D5=Total Decimal
+        5, // D1 field of 0x18FEEE00 1degree/bit -40 offset
+        6, // D4 field of 0x18FEEF00 4kpa/bit no offset
+        7); // D2 field of 0x18FEFC47 0.4%/bit no offset
+}
+
 void Rover::send_servo_out(mavlink_channel_t chan)
 {
 #if HIL_MODE != HIL_MODE_DISABLED
@@ -464,7 +475,12 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
             rover.send_nav_controller_output(chan);
         }
         break;
-
+        
+    case MSG_TRACTOR_HEALTH:
+        CHECK_PAYLOAD_SIZE(TRACTOR_HEALTH);
+        rover.send_tractor_health(chan);
+        break;
+        
     case MSG_GPS_RAW:
         CHECK_PAYLOAD_SIZE(GPS_RAW_INT);
         rover.gcs[chan-MAVLINK_COMM_0].send_gps_raw(rover.gps);
@@ -784,6 +800,7 @@ GCS_MAVLINK::data_stream_send(void)
         send_message(MSG_CURRENT_WAYPOINT);
         send_message(MSG_GPS_RAW);            // TODO - remove this message after location message is working
         send_message(MSG_NAV_CONTROLLER_OUTPUT);
+        send_message(MSG_TRACTOR_HEALTH);
     }
 
     if (rover.gcs_out_of_time) return;
