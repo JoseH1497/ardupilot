@@ -106,7 +106,7 @@ public:
 
 private:
     AP_HAL::BetterStream* cliSerial;
-
+     unsigned char tractor_health_info[5];
     // must be the first AP_Param variable declared to ensure its
     // constructor runs before the constructors of the other AP_Param
     // variables
@@ -380,6 +380,7 @@ private:
 private:
     // private member functions
     void ahrs_update();
+    void update_tractor_health();
     void mount_update(void);
     void update_alt();
     void gcs_failsafe_check(void);
