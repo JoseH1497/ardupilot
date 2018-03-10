@@ -4,7 +4,7 @@
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+   (at your option) any later version.rthhgffg
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -50,6 +50,7 @@ Rover rover;
   time they are expected to take (in microseconds)
 */
 const AP_Scheduler::Task Rover::scheduler_tasks[] = {
+    SCHED_TASK(update_tractor_health, 5, 1500),
     SCHED_TASK(read_radio,              1,   1000),
     SCHED_TASK(ahrs_update,             1,   6400),
     SCHED_TASK(read_sonars,             1,   2000),
@@ -97,7 +98,7 @@ void Rover::setup()
     notify.init(false);
 
     AP_Notify::flags.failsafe_battery = false;
-    
+    hal.uartE->begin(57600);
     rssi.init();
 
     init_ardupilot();
